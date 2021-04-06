@@ -1,0 +1,144 @@
+# '''================COMMANDS===================='''
+# @bot.command()
+# async def echo(ctx, *, phrase):
+#     '''Sends the inputted message\nExample: ?echo some text'''
+#     await ctx.send(phrase)
+# @echo.error
+# async def echo_error(ctx, error):
+#     await ctx.send(GenericError + '`'+ echo.help + '`')
+
+# @bot.command()
+# async def say(ctx, *, phrase):
+#     '''Lets the bot message for you\nExample: ?say say this for me please'''
+#     channel = ctx.channel
+#     await ctx.channel.purge(limit=1)
+#     await ctx.send(phrase)
+# @say.error
+# async def say_error(ctx, error):
+#     await ctx.send(GenericError + '`' + say.help + '`')
+
+# @bot.command()
+# @commands.has_permissions(administrator=True)
+# async def purge(ctx, count: int):
+#     '''Purges an inputted number of messages. Limited to admins \nExample: ?purge 5'''
+#     purge_channel = ctx.channel
+#     purge_channel.id = ctx.channel.id
+#     await ctx.channel.purge(limit=1)
+#     removed = await ctx.channel.purge(limit=count)
+#     print(ctx.channel)
+#     print(purge_channel)
+#     timeout = 5.0
+    
+#     if len(removed) == 0:
+#         await ctx.channel.send('???')
+#         return
+#     if len(removed) == 1:
+#         msg = await ctx.channel.send('Deleted 1 message', delete_after=timeout)
+#     else:
+#         if len(removed) > 50:
+#             msg = await ctx.channel.send('Deleted {} messages'.format(len(removed)) + '...help?', delete_after=timeout)
+#         else:
+#             msg = await ctx.channel.send('Deleted {} messages'.format(len(removed)), delete_after=timeout)
+# @purge.error
+# async def purge_error(ctx, error):
+#     await ctx.send(GenericError + '`' + purge.help + '`')
+
+# @bot.command()
+# async def roll(ctx, dice: str):
+#     """Rolls a dice in NdN format.\nExample: ?roll 1d6"""
+#     try:
+#         rolls, limit = map(int, dice.split('d'))
+#     except Exception:
+#         await ctx.send(GenericError + '`' + roll.help + '`')
+#         return
+
+#     result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+#     await ctx.send(result)
+
+# @bot.command(description='For when you wanna settle the score some other way')
+# async def choose(ctx, *choices: str):
+#     """Chooses between multiple choices.\nExample: ?choose red blue"""
+#     await ctx.send(random.choice(choices))
+# @choose.error
+# async def choose_error(ctx, error):
+#     await ctx.send(GenericError + '`' + choose.help + '`')
+
+# @bot.command()
+# async def repeat(ctx, times: int, *, content='Spam'):
+#     """Repeats a message the inputted number of times.\nExample: ?repeat spam"""
+#     for i in range(times):
+#         await ctx.send(content)
+# @repeat.error
+# async def repeat_error(ctx, error):
+#     await ctx.send(GenericError + '`'+ repeat.help + '`')
+
+# @bot.command()
+# async def userinfo(ctx, user: discord.User):
+#     '''Provides the user's id, name, and profile picture\nExample: ?userinfo @KooshieBooshie6660'''
+#     user_id = user.id
+#     username = user.name
+#     avatar = user.avatar_url
+#     await ctx.send('User found: {} -- {}\n{}'.format(user_id, username, avatar))
+# @userinfo.error
+# async def userinfo_error(ctx, error):
+#     await ctx.send(GenericError + '`' + userinfo.help + '`')
+
+# @bot.command()
+# async def joined(ctx, *, member: discord.Member):
+#     """Gives when a member joined the server last.\nExample: ?joined @KooshieBooshie6660"""
+#     await ctx.send('@{0.name} joined in {0.joined_at}'.format(member))
+# @joined.error
+# async def joined_error(ctx, error):
+#     if isinstance(error, commands.BadArgument):
+#         await ctx.send(GenericError + '`' + joined.help + '`')
+
+=========================================================================================
+=========================================================================================
+=========================================================================================
+=========================================================================================
+=========================================================================================
+=========================================================================================
+=========================================================================================
+=========================================================================================
+=========================================================================================
+=========================================================================================
+=========================================================================================
+
+# @bot.event
+# async def on_message_edit(before, after):
+#     on_message_edit = False
+#     debug_on_message_edit = True
+#     edit_channel = before.channel
+#     log = before.channel
+#     person = before.author
+#     if debug_on_message_edit == False:
+#         return
+#     if before.content == after.content:
+#         return
+#     else:
+#         if on_message_edit == True: #for sending it in the same channel as the sent message
+#             await log.send('%s has dun messed up:' % str(before.author.mention))
+#             await log.send("**Before correction: **" + before.content)
+#             await log.send("**After correction: **" + after.content)
+#         else:
+#             log = bot.get_channel(828120665135251462) #bot-logs channel
+#             await log.send('**%s has dun messed up in %s:**\nBefore correction: %s\nAfter correction: %s' % ( str(before.author), str(edit_channel.mention), str(before.content), str(after.content) ) )
+
+# @bot.event
+# async def on_message_delete(message):
+#     person = message.author
+#     if person.bot:
+#         return
+#     deleted_message_channel = message.channel
+#     log = bot.get_channel(828120665135251462) #bot-logs channel
+#     if len(message.attachments) > 0:
+#         await log.send('**%s has deleted their message in %s:**\nMessage: %s\nAttachment: %s' % ( str(message.author), str(message.channel.mention), str(message.content), str(message.attachments[0].url) ) )
+#     else:
+#         await log.send('**%s has deleted their message in %s:**\nMessage: %s' % ( str(message.author), str(message.channel.mention), str(message.content) ) )
+
+# @bot.event
+# async def on_raw_message_delete(payload):
+#     if payload.cached_message == None:
+#         chnl = await bot.fetch_channel(payload.channel_id)
+#         log = bot.get_channel(828120665135251462)
+#         await log.send("Older message deleted in: %s" %(chnl.mention))
