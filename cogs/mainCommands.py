@@ -31,22 +31,20 @@ class General(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def purge(self, ctx, count: int):
         '''Purges an inputted number of messages.\nExample: \n?purge 5'''
-        purge_channel = ctx.channel
-        purge_channel.id = ctx.channel.id
         await ctx.channel.purge(limit=1)
         removed = await ctx.channel.purge(limit=count)
         timeout = 5.0
         
         if len(removed) == 0:
-            await ctx.channel.send('???')
+            await ctx.send('???')
             return
         if len(removed) == 1:
-            msg = await ctx.channel.send('Deleted 1 message', delete_after=timeout)
+            msg = await ctx.send('Deleted 1 message', delete_after=timeout)
         else:
             if len(removed) > 50:
-                msg = await ctx.channel.send('Deleted {} messages'.format(len(removed)) + '...help?', delete_after=timeout)
+                msg = await ctx.send('Deleted {} messages'.format(len(removed)) + '...help?', delete_after=timeout)
             else:
-                msg = await ctx.channel.send('Deleted {} messages'.format(len(removed)), delete_after=timeout)
+                msg = await ctx.send('Deleted {} messages'.format(len(removed)), delete_after=timeout)
     @purge.error
     async def purge_error(self, ctx, error):
         await ctx.send(GenericError + '`Purges an inputted number of messages.\nExample: \n?purge 5`')
@@ -83,10 +81,9 @@ class General(commands.Cog):
     @commands.command(aliases=['user', 'profile', 'member'])
     async def userinfo(self, ctx, user: discord.User):
         '''Provides the user's id, name, and profile picture\nExample: \n?userinfo @KooshieBooshie6660'''
-        user_id = user.id
-        username = user.name
-        avatar = user.avatar_url
-        await ctx.send('User found: {} -- {}\n{}'.format(user_id, username, avatar))
+        embed = discord.Embed()
+        embed.set_image(url=user.avatar_url)
+        await ctx.send('User found: {} -- {}'.format(user.id, user.name), embed = embed)
     @userinfo.error
     async def userinfo_error(self, ctx, error):
         await ctx.send(GenericError + '`Provides the user\'s id, name, and profile picture\nExample: \n?userinfo @KooshieBooshie6660`')
