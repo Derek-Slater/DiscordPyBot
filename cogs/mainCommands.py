@@ -83,7 +83,10 @@ class General(commands.Cog):
         '''Provides the user's id, name, and profile picture\nExample: \n?userinfo @KooshieBooshie6660'''
         embed = discord.Embed()
         embed.set_image(url=user.avatar_url)
-        await ctx.send('User found: {} -- {}'.format(user.id, user.name), embed = embed)
+        embed.set_author(name="{} - {}".format(user.name, user.id), icon_url=user.avatar_url)
+        embed.set_footer(text="Requested by: {}".format(ctx.author.name))
+        
+        await ctx.send('User found:', embed = embed)
     @userinfo.error
     async def userinfo_error(self, ctx, error):
         await ctx.send(GenericError + '`Provides the user\'s id, name, and profile picture\nExample: \n?userinfo @KooshieBooshie6660`')
