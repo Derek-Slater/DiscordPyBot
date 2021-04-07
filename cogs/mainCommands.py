@@ -79,12 +79,13 @@ class General(commands.Cog):
         await ctx.send(GenericError + '`Repeats a message the inputted number of times.\nExample: \n?repeat spam`')
 
     @commands.command(aliases=['user', 'profile', 'member'])
-    async def userinfo(self, ctx, user: discord.User):
+    async def userinfo(self, ctx, user: discord.Member):
         '''Provides the user's id, name, and profile picture\nExample: \n?userinfo @KooshieBooshie6660'''
         embed = discord.Embed()
         embed.set_image(url=user.avatar_url)
         embed.set_author(name="{} - {}".format(user.name, user.id), icon_url=user.avatar_url)
         embed.set_footer(text="Requested by: {}".format(ctx.author.name))
+        embed.add_field(name="Joined at", value=user.joined_at)
         
         await ctx.send('User found:', embed = embed)
     @userinfo.error
