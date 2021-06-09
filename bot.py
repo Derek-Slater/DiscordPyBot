@@ -8,9 +8,9 @@ intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix='?', intents = intents)
 
-@bot.check
-async def globally_block_dms(ctx):
-    return ctx.guild is not None
+# @bot.check
+# async def globally_block_dms(ctx):
+#     return ctx.guild is not None
 
 @bot.event
 async def on_ready():
@@ -21,11 +21,6 @@ async def on_ready():
     print('------------------------------')
     game = discord.Game('...copying consciousness from old body...')
     await bot.change_presence(activity=game)
-
-@bot.command()
-async def search(hidden=True):
-    '''In Progress...Returns commands that start with entered string\nExample (will return all commands starting with "r"):\n?search r'''
-    pass
 
 bot.load_extension("cogs.eventChecks")
 bot.load_extension("cogs.mainCommands")

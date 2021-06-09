@@ -1,9 +1,10 @@
 import discord
 from discord.ext import commands
-
 import random
-GenericError = "*Either something went wrong, or the command was inputted incorrectly, see below for more info, or type ?help <command> for help on other commands:*\n"
+import eliza.eliza
 
+GenericError = "*Either something went wrong, or the command was inputted incorrectly, see below for more info, or type ?help <command> for help on other commands:*\n"
+ELIZA = eliza.eliza.Eliza()
 class General(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -95,11 +96,20 @@ class General(commands.Cog):
     @commands.command(aliases=['joindate'])
     async def joined(self, ctx, *, member: discord.Member):
         """Gives when a member joined the server last.\nExample: ?joined @KooshieBooshie6660"""
-        await ctx.send('@{0.name} joined in {0.joined_at}'.format(member))
+        await ctx.send('{0.name} joined in {0.joined_at}'.format(member))
     @joined.error
     async def joined_error(self, ctx, error):
         # if isinstance(error, commands.BadArgument):
         await ctx.send(GenericError + '`Gives when a member joined the server last.\nExample: \n?joined @KooshieBooshie6660`')
+
+    @commands.command(aliases=['talk'])
+    async def chat(self, ctx, *, text):
+        """Chat to the bot\nExample: ?talk How are you?"""
+        await ctx.send(ELIZA.respond(text))
+    @joined.error
+    async def joined_error(self, ctx, error):
+        # if isinstance(error, commands.BadArgument):
+        await ctx.send(GenericError + '`Chat to the bot\nExample: ?talk How are you?`')
 
 def setup(bot):
     bot.add_cog(General(bot))
