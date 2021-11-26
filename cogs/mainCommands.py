@@ -59,8 +59,8 @@ class General(commands.Cog):
             await ctx.send(GenericError + '`' + roll.help + '`')
             return
 
-        result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
-        await ctx.send(result)
+        numbers = list(random.randint(1, limit) for r in range(rolls))
+        await ctx.send(str(numbers) + "\nTotal: " + str(sum(numbers)))
 
     @commands.command(description='For when you can\'t choose...', aliases=['pick'])
     async def choose(self, ctx, *choices: str):
@@ -72,12 +72,12 @@ class General(commands.Cog):
 
     @commands.command(aliases=['spam'])
     async def repeat(self, ctx, times: int, *, content='Spam'):
-        """Repeats a message the inputted number of times.\nExample: \n?repeat spam"""
+        """Repeats a message the inputted number of times.\nExample: \n?repeat 5 spam"""
         for i in range(times):
             await ctx.send(content)
     @repeat.error
     async def repeat_error(self, ctx, error):
-        await ctx.send(GenericError + '`Repeats a message the inputted number of times.\nExample: \n?repeat spam`')
+        await ctx.send(GenericError + '`Repeats a message the inputted number of times.\nExample: \n?repeat 5 spam`')
 
     @commands.command(aliases=['user', 'profile', 'member'])
     async def userinfo(self, ctx, user: discord.Member):
