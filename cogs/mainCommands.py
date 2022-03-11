@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import random
 import eliza.eliza
+import os
+from memeMaker import downloadImgFromURL, addTextToImage
 
 GenericError = "*Either something went wrong, or the command was inputted incorrectly, see below for more info, or type ?help <command> for help on other commands:*\n"
 ELIZA = eliza.eliza.Eliza()
@@ -110,6 +112,61 @@ class General(commands.Cog):
     async def joined_error(self, ctx, error):
         # if isinstance(error, commands.BadArgument):
         await ctx.send(GenericError + '`Chat to the bot\nExample: ?talk How are you?`')
+
+    @commands.command()
+    async def makememe(self, ctx, *, text=None):
+        '''Makes a meme by applying text on either a provided link or attachment\nExample: \n?makeMeme <link> Meme Text Meme Text'''
+        imageURL = ""
+        try: #link provided
+            if text != "":
+                text = text.split()
+                imageURL = text[0]
+        except:
+            makeMeme_error()
+            return
+        try: #image present
+            if ctx.message.attachments[0].url is not None:
+                imageURL = ctx.message.attachments[0].url
+        except: #if image not present, don't include link in the text that'll be added
+            text = text[1:]
+        
+        if len(text) < 1:
+            makeMeme_error()
+            return
+        if imageURL == "":
+            makeMeme_error()
+            return
+
+        imageName = downloadImgFromURL(imageURL)
+        if imageName is not None:
+            meme, duration = addTextToImage(imageName, ' '.join(text))
+            if meme is not None:
+                if len(meme) == 1:
+                    meme[0].save(imageName, lossless=True)
+                else:
+                    meme[0].save(imageName, save_all=True, append_images=meme[1:], loop=0, duration=duration)
+            else:
+                await ctx.send("Provided link or file needs to be a valid image")
+                if os.path.exists(imageName):
+                    os.remove(imageName)
+                return
+        else:
+            makeMeme_error()
+            if os.path.exists(imageName):
+                os.remove(imageName)
+            return
+
+        f = open(imageName, "rb")
+        fileToSend = discord.File(f)
+        await ctx.message.delete()
+        await ctx.send("Courtesy of " + ctx.message.author.mention, file=fileToSend)
+        # # Afterwards, delete its local copy (whether it was actually an image or not)
+        f.close()
+        if os.path.exists(imageName):
+            os.remove(imageName)
+    # @makememe.error
+    # async def makeMeme_error(self, ctx, error):
+    #     await ctx.send(GenericError + '`Makes a meme by applying text on either a provided link or attachment\nExample: \n?makeMeme <link> Meme Text Meme Text`')
 
 def setup(bot):
     bot.add_cog(General(bot))

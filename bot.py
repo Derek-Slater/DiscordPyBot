@@ -24,4 +24,4 @@ async def on_ready():
 
 bot.load_extension("cogs.eventChecks")
 bot.load_extension("cogs.mainCommands")
-bot.run('')
+bot.run('token')
